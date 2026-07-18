@@ -115,6 +115,9 @@ html, body {
 
 .logo-area {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .got-title-small {
@@ -552,7 +555,7 @@ html, body {
 /* Persistent Medieval Scoreboard (Marcador) */
 .scoreboard-container {
   position: fixed;
-  top: 25px;
+  top: 50%;
   right: 25px;
   width: 250px;
   background: rgba(17, 18, 21, 0.95);
@@ -562,22 +565,24 @@ html, body {
   border-image: linear-gradient(to bottom, #aa820a, #d4af37, #5c4706) 1;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
   z-index: 100;
+  transform: translateY(-50%);
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
   border-radius: 4px;
 }
 
 .scoreboard-container.collapsed {
-  transform: translateY(-80px) scale(0.8);
-  opacity: 0.6;
+  transform: translateY(-50%) translateX(210px);
+  opacity: 0.8;
 }
 
 .scoreboard-container.collapsed:hover {
   opacity: 1;
-  transform: translateY(-80px) scale(0.85);
+  transform: translateY(-50%) translateX(200px);
 }
 
 .scoreboard-header {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
   background: rgba(212, 175, 55, 0.1);
@@ -602,10 +607,11 @@ html, body {
   align-items: center;
   justify-content: center;
   transition: transform 0.3s;
+  transform: rotate(90deg); /* Points right/outwards when open */
 }
 
 .scoreboard-container.collapsed .toggle-btn {
-  transform: rotate(180deg);
+  transform: rotate(270deg); /* Points left/inwards when collapsed */
 }
 
 .scoreboard-container .toggle-btn .icon {
@@ -975,14 +981,12 @@ html, body {
 }
 
 .menu-trigger-btn {
-  position: fixed;
-  top: 25px;
-  left: 25px;
+  position: relative;
   background: rgba(17, 18, 21, 0.7);
   border: 1px solid var(--gold-primary);
   color: var(--gold-primary);
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
