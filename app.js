@@ -500,6 +500,22 @@ function renderSlide() {
       scoreYani.classList.add('revealed');
       scoreDavid.classList.add('revealed');
 
+      // Calculate dinner bet text
+      let dinnerText = "";
+      if (scores.yani > scores.david) {
+        dinnerText = "<br><br><span class='dinner-challenge' style='color: var(--gold-light); font-weight: bold; font-size: clamp(0.95rem, 1.8vw, 1.15rem); display: block; border: 1.5px dashed var(--gold-primary); padding: 12px; margin-top: 15px; background: rgba(212,175,55,0.05);'>👑 ¡Yanina es la ganadora! David ha perdido la apuesta y tendrá que pagar una cena donde Yanina decida. 🍽️🍷</span>";
+      } else if (scores.david > scores.yani) {
+        dinnerText = "<br><br><span class='dinner-challenge' style='color: var(--gold-light); font-weight: bold; font-size: clamp(0.95rem, 1.8vw, 1.15rem); display: block; border: 1.5px dashed var(--gold-primary); padding: 12px; margin-top: 15px; background: rgba(212,175,55,0.05);'>👑 ¡David es el ganador! Yanina ha perdido la apuesta y tendrá que pagar una cena donde David decida. 🍽️🍷</span>";
+      } else {
+        dinnerText = "<br><br><span class='dinner-challenge' style='color: var(--gold-light); font-weight: bold; font-size: clamp(0.95rem, 1.8vw, 1.15rem); display: block; border: 1.5px dashed var(--gold-primary); padding: 12px; margin-top: 15px; background: rgba(212,175,55,0.05);'>🤝 ¡Empate en el Trono! Nadie pierde, pero la tradición manda: compartiréis una cena especial y la pagaréis a medias. 🍽️🍷</span>";
+      }
+
+      // Append dinner bet to farewell text
+      const textElem = farewellBox.querySelector('.farewell-text');
+      if (textElem) {
+        textElem.innerHTML = slide.farewellText + dinnerText;
+      }
+
       // Expand the farewell message box
       farewellBox.classList.add('expanded');
       
