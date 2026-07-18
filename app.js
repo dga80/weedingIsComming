@@ -286,17 +286,10 @@ function renderSlide() {
   // Render based on Slide Type
   if (slide.type === 'cover') {
     container.innerHTML = `
-      <div class="quiz-card cover-layout">
-        <h1 class="got-logo">THE WEDDING<br>IS COMING</h1>
-        <div class="got-divider">
-          <span class="line"></span>
-          <svg class="symbol" viewBox="0 0 100 100">
-            <path d="M50,10 L90,30 L90,70 L50,90 L10,70 L10,30 Z" fill="none" stroke="#d4af37" stroke-width="4"/>
-            <path d="M50,25 L75,37 L75,63 L50,75 L25,63 L25,37 Z" fill="none" stroke="#d4af37" stroke-width="2"/>
-          </svg>
-          <span class="line"></span>
+      <div class="quiz-card cover-layout" style="max-width: 650px;">
+        <div class="cover-image-container">
+          <img src="portada.png" alt="The Wedding is Coming: The Quiz Season" class="cover-art-img">
         </div>
-        <p class="cover-subtitle">${slide.subtitle}</p>
         <span class="spoiler-badge">${slide.spoilerText}</span>
         <button class="start-btn" id="start-game-btn">EMPEZAR</button>
       </div>
