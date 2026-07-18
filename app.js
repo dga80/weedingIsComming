@@ -175,7 +175,14 @@ const slides = [
 
   // Categoría 6 - Final emotivo
   { type: 'question', category: 'Final emotivo', question: 'Escribe lo que más te gusta de tu pareja.', instruction: 'write' },
-  { type: 'question', category: 'Final emotivo', question: 'Escribe una palabra que defina vuestra relación.', instruction: 'write' }
+  { type: 'question', category: 'Final emotivo', question: 'Escribe una palabra que defina vuestra relación.', instruction: 'write' },
+  {
+    type: 'results',
+    category: 'El Veredicto',
+    title: 'El Veredicto Final',
+    farewellTitle: 'Una nueva etapa comienza',
+    farewellText: 'El invierno ha quedado atrás y vuestro propio reino de complicidad y risas acaba de fundarse. Que vuestra historia de amor sea tan eterna como los cantos de Poniente, pero mucho más feliz. Que este nuevo viaje que emprendéis juntos esté lleno de aventuras, lealtad y momentos inolvidables. ¡Que viva el amor de Yani y David! 🥂💍✨'
+  }
 ];
 
 // 2. State Variables
@@ -263,6 +270,7 @@ function renderSlide() {
   
   // Toggle cover class on body
   document.body.classList.toggle('on-cover', currentSlideIndex === 0);
+  document.body.classList.toggle('on-results-slide', slide.type === 'results');
   
   // Update header progress information
   document.getElementById('current-category').textContent = slide.category;
@@ -425,6 +433,79 @@ function renderSlide() {
         }
       });
     }
+  } else if (slide.type === 'results') {
+    container.innerHTML = `
+      <div class="quiz-card results-layout">
+        <h2 class="question-text" style="color: var(--gold-primary); font-size: clamp(1.8rem, 3.5vw, 2.3rem); margin-bottom: 20px;">${slide.title}</h2>
+        
+        <!-- Large Score Reveal Panel -->
+        <div class="results-score-panel">
+          <!-- Yani Card -->
+          <div class="result-player-card">
+            <div class="result-player-shield">
+              <svg viewBox="0 0 100 100" class="sigil-icon" style="width: 60px; height: 60px;">
+                <path d="M50,15 L60,35 L80,30 L70,50 L85,70 L55,65 L50,85 L45,65 L15,70 L30,50 L20,30 L40,35 Z" fill="none" stroke="#d4af37" stroke-width="3"/>
+                <circle cx="50" cy="50" r="10" fill="none" stroke="#d4af37" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="result-player-name">YANI</div>
+            <div class="result-player-score-container">
+              <div class="result-score-display" id="final-score-yani">?</div>
+            </div>
+          </div>
+          
+          <!-- VS Divider -->
+          <div class="results-vs-divider">
+            <svg viewBox="0 0 100 100" class="icon" style="width: 30px; height: 30px; fill: var(--gold-primary);">
+              <path d="M45,10 L55,10 L52,90 L48,90 Z" />
+              <path d="M25,48 L75,48 L75,52 L25,52 Z" />
+            </svg>
+          </div>
+
+          <!-- David Card -->
+          <div class="result-player-card">
+            <div class="result-player-shield">
+              <svg viewBox="0 0 100 100" class="sigil-icon" style="width: 60px; height: 60px;">
+                <path d="M50,15 L75,25 L70,65 L50,85 L30,65 L25,25 Z" fill="none" stroke="#e0e0e0" stroke-width="3"/>
+                <path d="M50,25 L65,32 L62,60 L50,72 L38,60 L35,32 Z" fill="none" stroke="#e0e0e0" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="result-player-name">DAVID</div>
+            <div class="result-player-score-container">
+              <div class="result-score-display" id="final-score-david">?</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="reveal-btn-global" id="reveal-final-scores-btn" style="margin-top: 15px; margin-bottom: 20px; padding: 12px 30px; font-size: 1.05rem;">REVELAR EL VEREDICTO</button>
+
+        <!-- Farewell Text Container (Initially Hidden/Collapsed) -->
+        <div class="farewell-container" id="farewell-message-box">
+          <h3 class="farewell-title">${slide.farewellTitle}</h3>
+          <p class="farewell-text">${slide.farewellText}</p>
+        </div>
+      </div>
+    `;
+
+    // Hook up Reveal button
+    const revealBtn = document.getElementById('reveal-final-scores-btn');
+    const scoreYani = document.getElementById('final-score-yani');
+    const scoreDavid = document.getElementById('final-score-david');
+    const farewellBox = document.getElementById('farewell-message-box');
+
+    revealBtn.addEventListener('click', () => {
+      // Reveal the scores with flip/fade
+      scoreYani.textContent = scores.yani;
+      scoreDavid.textContent = scores.david;
+      scoreYani.classList.add('revealed');
+      scoreDavid.classList.add('revealed');
+
+      // Expand the farewell message box
+      farewellBox.classList.add('expanded');
+      
+      // Hide the reveal button after use
+      revealBtn.style.display = 'none';
+    });
   }
 }
 
