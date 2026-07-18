@@ -663,10 +663,18 @@ function loadSlidePoints() {
   const saved = localStorage.getItem('wedding_quiz_slide_points');
   if (saved) {
     try {
-      slidePoints = JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === 'object') {
+        slidePoints = parsed;
+      } else {
+        slidePoints = {};
+      }
     } catch (e) {
       console.error("Error loading slide points", e);
+      slidePoints = {};
     }
+  } else {
+    slidePoints = {};
   }
 }
 
