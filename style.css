@@ -296,6 +296,90 @@ html, body {
   transform-origin: center;
 }
 
+/* Fullscreen cover slide overrides when body is on cover */
+body.on-cover .quiz-header,
+body.on-cover .quiz-footer,
+body.on-cover .scoreboard-container,
+body.on-cover .menu-trigger-btn {
+  display: none !important;
+}
+
+body.on-cover .quiz-viewport {
+  padding: 0 !important;
+  width: 100vw;
+  height: 100vh;
+}
+
+body.on-cover .slide-wrapper,
+body.on-cover .slide-content {
+  width: 100%;
+  height: 100%;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body.on-cover .quiz-card.cover-layout {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  padding: 0;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+body.on-cover .quiz-card.cover-layout::before,
+body.on-cover .quiz-card.cover-layout::after {
+  display: none !important;
+}
+
+body.on-cover .cover-image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100% !important;
+  border: none;
+  box-shadow: none;
+  z-index: 1;
+}
+
+body.on-cover .cover-art-img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center;
+}
+
+.cover-overlay {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 90%;
+  max-width: 450px;
+  padding: 20px;
+  background: rgba(17, 18, 21, 0.45);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  animation: fadeInArt 1.5s ease-out;
+}
+
 @keyframes coverArtZoom {
   0% { transform: scale(1.0); }
   100% { transform: scale(1.06); }

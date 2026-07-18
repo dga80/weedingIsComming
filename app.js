@@ -261,6 +261,9 @@ function renderSlide() {
   const container = document.getElementById('slide-content');
   const slide = slides[currentSlideIndex];
   
+  // Toggle cover class on body
+  document.body.classList.toggle('on-cover', currentSlideIndex === 0);
+  
   // Update header progress information
   document.getElementById('current-category').textContent = slide.category;
   document.getElementById('progress-text').textContent = `${currentSlideIndex + 1} / ${slides.length}`;
@@ -286,12 +289,14 @@ function renderSlide() {
   // Render based on Slide Type
   if (slide.type === 'cover') {
     container.innerHTML = `
-      <div class="quiz-card cover-layout" style="max-width: 650px;">
+      <div class="quiz-card cover-layout">
         <div class="cover-image-container">
           <img src="portada.png" alt="The Wedding is Coming: The Quiz Season" class="cover-art-img">
         </div>
-        <span class="spoiler-badge">${slide.spoilerText}</span>
-        <button class="start-btn" id="start-game-btn">EMPEZAR</button>
+        <div class="cover-overlay">
+          <span class="spoiler-badge">${slide.spoilerText}</span>
+          <button class="start-btn" id="start-game-btn">EMPEZAR</button>
+        </div>
       </div>
     `;
     
