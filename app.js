@@ -188,11 +188,13 @@ const slides = [
 // 2. State Variables
 let currentSlideIndex = 0;
 let scores = { yani: 0, david: 0 };
+let slidePoints = {};
 let categoryFirstSlideIndices = {};
 
 // 3. Initialize App
 document.addEventListener('DOMContentLoaded', () => {
   loadScores();
+  loadSlidePoints();
   calculateCategoryIndices();
   generateCategoryMenu();
   renderSlide();
@@ -523,6 +525,7 @@ function renderSlide() {
       revealBtn.style.display = 'none';
     });
   }
+  updateScoreboardHighlights();
 }
 
 // 5. Directional Navigation with View Transitions
@@ -573,34 +576,63 @@ function changeScore(player, val) {
   
   saveScores();
   
+  // Track slide-specific point allocations on question/quiz slides
+  if (currentSlideIndex >= 2 && currentSlideIndex < slides.length - 1) {
+    if (val > 0) {
+      // If the other player already had the point, make it "both"
+      const currentWinner = slidePoints[currentSlideIndex];
+      if (currentWinner === (player === 'yani' ? 'david' : 'yani')) {
+        slidePoints[currentSlideIndex] = 'both';
+      } else if (!currentWinner || currentWinner === 'none') {
+        slidePoints[currentSlideIndex] = player;
+      }
+    } else {
+      // Point subtracted
+      const currentWinner = slidePoints[currentSlideIndex];
+      if (currentWinner === 'both') {
+        slidePoints[currentSlideIndex] = (player === 'yani' ? 'david' : 'yani');
+      } else if (currentWinner === player) {
+        slidePoints[currentSlideIndex] = null;
+      }
+    }
+    saveSlidePoints();
+    updateScoreboardHighlights();
+  }
+
   // Animate the scoreboard text change
   const scoreDisplay = document.getElementById(`score-${player}`);
-  scoreDisplay.textContent = scores[player];
-  
-  scoreDisplay.classList.add('pulse');
-  setTimeout(() => {
-    scoreDisplay.classList.remove('pulse');
-  }, 300);
+  if (scoreDisplay) {
+    scoreDisplay.textContent = scores[player];
+    scoreDisplay.classList.add('pulse');
+    setTimeout(() => {
+      scoreDisplay.classList.remove('pulse');
+    }, 300);
+  }
 }
 
 function resetScores() {
-  if (confirm('¿Estás seguro de que quieres reiniciar el marcador a 0?')) {
+  if (confirm('¿Estás seguro de que quieres reiniciar el marcador y los puntos de las preguntas a 0?')) {
     scores.yani = 0;
     scores.david = 0;
+    slidePoints = {};
     saveScores();
+    saveSlidePoints();
+    updateScoreboardHighlights();
     
     const displayYani = document.getElementById('score-yani');
     const displayDavid = document.getElementById('score-david');
     
-    displayYani.textContent = 0;
-    displayDavid.textContent = 0;
-    
-    displayYani.classList.add('pulse');
-    displayDavid.classList.add('pulse');
-    setTimeout(() => {
-      displayYani.classList.remove('pulse');
-      displayDavid.classList.remove('pulse');
-    }, 300);
+    if (displayYani && displayDavid) {
+      displayYani.textContent = 0;
+      displayDavid.textContent = 0;
+      
+      displayYani.classList.add('pulse');
+      displayDavid.classList.add('pulse');
+      setTimeout(() => {
+        displayYani.classList.remove('pulse');
+        displayDavid.classList.remove('pulse');
+      }, 300);
+    }
   }
 }
 
@@ -613,10 +645,49 @@ function loadScores() {
   if (saved) {
     try {
       scores = JSON.parse(saved);
-      document.getElementById('score-yani').textContent = scores.yani;
-      document.getElementById('score-david').textContent = scores.david;
+      const displayYani = document.getElementById('score-yani');
+      const displayDavid = document.getElementById('score-david');
+      if (displayYani) displayYani.textContent = scores.yani;
+      if (displayDavid) displayDavid.textContent = scores.david;
     } catch (e) {
       console.error("Error loading scores", e);
+    }
+  }
+}
+
+function saveSlidePoints() {
+  localStorage.setItem('wedding_quiz_slide_points', JSON.stringify(slidePoints));
+}
+
+function loadSlidePoints() {
+  const saved = localStorage.getItem('wedding_quiz_slide_points');
+  if (saved) {
+    try {
+      slidePoints = JSON.parse(saved);
+    } catch (e) {
+      console.error("Error loading slide points", e);
+    }
+  }
+}
+
+function updateScoreboardHighlights() {
+  const playerYani = document.querySelector('.player-card.player-yani');
+  const playerDavid = document.querySelector('.player-card.player-david');
+  if (!playerYani || !playerDavid) return;
+
+  playerYani.classList.remove('has-point');
+  playerDavid.classList.remove('has-point');
+
+  // Highlights only apply to active question slides
+  if (currentSlideIndex >= 2 && currentSlideIndex < slides.length - 1) {
+    const winner = slidePoints[currentSlideIndex];
+    if (winner === 'yani') {
+      playerYani.classList.add('has-point');
+    } else if (winner === 'david') {
+      playerDavid.classList.add('has-point');
+    } else if (winner === 'both') {
+      playerYani.classList.add('has-point');
+      playerDavid.classList.add('has-point');
     }
   }
 }
