@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Wedding is Coming: The Quiz Season</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Juego interactivo para bodas: The Wedding is Coming: The Quiz Season. ¿Cuánto se conocen los novios realmente?">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lora:ital,wght@0,400;0,700;1,400&family=Marcellus&display=swap" rel="stylesheet">
+  
+  <!-- Styling -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Music (optional but layout included, muted by default for browser compliance) -->
+  <audio id="bg-music" loop>
+    <source src="" type="audio/mp3">
+  </audio>
+
+  <!-- Ambient Overlay (For GoT atmosphere like embers, vignettes) -->
+  <div class="ambient-vignette"></div>
+  <div class="fire-embers" id="embers-container"></div>
+
+  <!-- Persistent Medieval Scoreboard (Marcador) -->
+  <div class="scoreboard-container" id="scoreboard">
+    <div class="scoreboard-header">
+      <div class="scoreboard-title">MARCADOR</div>
+      <button class="toggle-btn" id="toggle-score-btn" aria-label="Minimizar marcador">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+      </button>
+    </div>
+    <div class="scoreboard-body">
+      <!-- Player Yani -->
+      <div class="player-card player-yani">
+        <div class="player-avatar">
+          <svg viewBox="0 0 100 100" class="sigil-icon">
+            <!-- Crown/Rose Sigil for Yani -->
+            <path d="M50,15 L60,35 L80,30 L70,50 L85,70 L55,65 L50,85 L45,65 L15,70 L30,50 L20,30 L40,35 Z" fill="none" stroke="#d4af37" stroke-width="3"/>
+            <circle cx="50" cy="50" r="10" fill="none" stroke="#d4af37" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="player-name">YANI</div>
+        <div class="score-display" id="score-yani">0</div>
+        <div class="score-controls">
+          <button class="score-btn minus" onclick="changeScore('yani', -1)" aria-label="Restar punto a Yani">-</button>
+          <button class="score-btn plus" onclick="changeScore('yani', 1)" aria-label="Sumar punto a Yani">+</button>
+        </div>
+      </div>
+      
+      <!-- Divider -->
+      <div class="scoreboard-divider"></div>
+      
+      <!-- Player David -->
+      <div class="player-card player-david">
+        <div class="player-avatar">
+          <svg viewBox="0 0 100 100" class="sigil-icon">
+            <!-- Wolf/Shield Sigil for David -->
+            <path d="M50,15 L75,25 L70,65 L50,85 L30,65 L25,25 Z" fill="none" stroke="#e0e0e0" stroke-width="3"/>
+            <path d="M50,25 L65,32 L62,60 L50,72 L38,60 L35,32 Z" fill="none" stroke="#e0e0e0" stroke-width="1.5"/>
+            <path d="M45,45 L50,38 L55,45 L50,55 Z" fill="#e0e0e0"/>
+          </svg>
+        </div>
+        <div class="player-name">DAVID</div>
+        <div class="score-display" id="score-david">0</div>
+        <div class="score-controls">
+          <button class="score-btn minus" onclick="changeScore('david', -1)" aria-label="Restar punto a David">-</button>
+          <button class="score-btn plus" onclick="changeScore('david', 1)" aria-label="Sumar punto a David">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="scoreboard-footer">
+      <button class="reset-btn" onclick="resetScores()">REINICIAR MARCADOR</button>
+    </div>
+  </div>
+
+  <!-- Quick Category Jump Sidebar -->
+  <nav class="sidebar-menu" id="sidebar-menu" aria-label="Navegación por categorías">
+    <div class="sidebar-header">
+      <span>CATEGORÍAS</span>
+      <button id="close-sidebar-btn" class="close-btn" aria-label="Cerrar menú">&times;</button>
+    </div>
+    <ul class="sidebar-list" id="category-jump-list">
+      <!-- Generated Dynamically in JS -->
+    </ul>
+  </nav>
+
+  <!-- Menu Trigger Button -->
+  <button class="menu-trigger-btn" id="menu-trigger-btn" aria-label="Abrir menú de categorías">
+    <svg viewBox="0 0 24 24" class="icon"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+  </button>
+
+  <!-- Main Viewport -->
+  <main class="quiz-viewport">
+    
+    <!-- Top Bar -->
+    <header class="quiz-header">
+      <div class="logo-area">
+        <span class="got-title-small">THE WEDDING IS COMING</span>
+      </div>
+      <div class="category-indicator">
+        <span id="current-category">Portada</span>
+      </div>
+      <div class="progress-container">
+        <span class="progress-text" id="progress-text">1 / 46</span>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-bar-fill" style="width: 2.17%;"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Slide Content Area -->
+    <section class="slide-wrapper" id="slide-wrapper">
+      
+      <!-- Slide Container (Dynamic Content Loaded here) -->
+      <div class="slide-content" id="slide-content">
+        <!-- Rendered via JS -->
+      </div>
+      
+    </section>
+
+    <!-- Bottom Controls Bar -->
+    <footer class="quiz-footer">
+      <div class="footer-left">
+        <button class="ctrl-btn" id="prev-btn" aria-label="Diapositiva anterior">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+          Atrás
+        </button>
+      </div>
+
+      <div class="footer-center">
+        <div class="keyboard-hints">
+          <span>Usa <kbd>←</kbd> <kbd>→</kbd> o <kbd>Espacio</kbd></span>
+        </div>
+      </div>
+
+      <div class="footer-right">
+        <button class="ctrl-btn" id="next-btn" aria-label="Diapositiva siguiente">
+          Siguiente
+          <svg viewBox="0 0 24 24" class="icon"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </button>
+        <button class="fullscreen-btn" id="fullscreen-btn" aria-label="Pantalla completa">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        </button>
+      </div>
+    </footer>
+  </main>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
