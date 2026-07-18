@@ -194,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFullscreen();
   initMenuControls();
   generateEmbers();
+  initMusicControls();
 });
 
 // Calculate the first slide index for each category for navigation shortcuts
@@ -302,6 +303,7 @@ function renderSlide() {
     `;
     
     document.getElementById('start-game-btn').addEventListener('click', () => {
+      playMusic();
       navigate(() => {
         currentSlideIndex = 1;
         renderSlide();
@@ -528,10 +530,15 @@ function initScoreboardToggle() {
   const scoreboard = document.getElementById('scoreboard');
   const toggleBtn = document.getElementById('toggle-score-btn');
   
+  // Set initial state on body
+  const isCollapsed = scoreboard.classList.contains('collapsed');
+  document.body.classList.toggle('scoreboard-collapsed', isCollapsed);
+  
   toggleBtn.addEventListener('click', () => {
-    scoreboard.classList.toggle('collapsed');
+    const collapsed = scoreboard.classList.toggle('collapsed');
+    document.body.classList.toggle('scoreboard-collapsed', collapsed);
     
-    if (scoreboard.classList.contains('collapsed')) {
+    if (collapsed) {
       toggleBtn.setAttribute('aria-label', 'Expandir marcador');
     } else {
       toggleBtn.setAttribute('aria-label', 'Minimizar marcador');
@@ -648,4 +655,50 @@ function createEmber(container) {
     ember.style.left = Math.random() * 100 + 'vw';
     ember.style.setProperty('--ember-drift', (Math.random() * 200 - 100) + 'px');
   });
+}
+
+// 11. Music Controls Lógica
+function initMusicControls() {
+  const btn = document.getElementById('music-toggle-btn');
+  if (btn) {
+    btn.addEventListener('click', toggleMusic);
+  }
+}
+
+function playMusic() {
+  const audio = document.getElementById('bg-music');
+  if (audio && audio.paused) {
+    audio.play().then(() => {
+      updateMusicIcon(true);
+    }).catch(err => {
+      console.log("Autoplay blocked or audio load error:", err);
+    });
+  }
+}
+
+function toggleMusic() {
+  const audio = document.getElementById('bg-music');
+  if (audio) {
+    if (audio.paused) {
+      audio.play().then(() => {
+        updateMusicIcon(true);
+      }).catch(err => {
+        console.log("Error playing audio:", err);
+      });
+    } else {
+      audio.pause();
+      updateMusicIcon(false);
+    }
+  }
+}
+
+function updateMusicIcon(isPlaying) {
+  const btn = document.getElementById('music-toggle-btn');
+  if (btn) {
+    if (isPlaying) {
+      btn.classList.add('playing');
+    } else {
+      btn.classList.remove('playing');
+    }
+  }
 }

@@ -13,8 +13,8 @@
   --silver-dark: #a0a0a0;
   --text-color: #f5f5f7;
   --font-header: 'Cinzel', serif;
-  --font-body: 'Lora', serif;
-  --font-accent: 'Marcellus', serif;
+  --font-body: 'Montserrat', sans-serif;
+  --font-accent: 'Outfit', sans-serif;
 }
 
 * {
@@ -98,6 +98,14 @@ html, body {
   align-items: center;
   z-index: 10;
   padding: 20px;
+  transition: padding-right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* On screens wider than 1200px, shift layout left to accommodate open scoreboard */
+@media (min-width: 1200px) {
+  body:not(.scoreboard-collapsed) .quiz-viewport {
+    padding-right: 280px;
+  }
 }
 
 /* Header Area */
@@ -200,13 +208,15 @@ html, body {
 .quiz-card {
   width: 100%;
   max-width: 900px;
+  max-height: 100%;
+  overflow-y: auto;
   background: var(--bg-card);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 2px solid var(--gold-primary);
   border-image: linear-gradient(135deg, #aa820a 0%, #d4af37 50%, #aa820a 100%) 2;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(214, 175, 55, 0.15);
-  padding: 40px;
+  padding: clamp(20px, 4vh, 40px);
   border-radius: 4px;
   text-align: center;
   display: flex;
@@ -215,6 +225,22 @@ html, body {
   align-items: center;
   position: relative;
   animation: cardPulse 8s infinite alternate ease-in-out;
+}
+
+/* Custom Scrollbar for Quiz Card */
+.quiz-card::-webkit-scrollbar {
+  width: 6px;
+}
+.quiz-card::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+.quiz-card::-webkit-scrollbar-thumb {
+  background: var(--gold-dark);
+  border-radius: 3px;
+}
+.quiz-card::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-primary);
 }
 
 @keyframes cardPulse {
@@ -335,18 +361,19 @@ html, body {
 
 .rules-intro {
   font-family: var(--font-accent);
-  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-size: clamp(0.95rem, 1.8vw, 1.25rem);
   color: var(--gold-primary);
   text-align: center;
-  margin-bottom: 25px;
-  line-height: 1.5;
+  margin-bottom: clamp(15px, 3vh, 25px);
+  line-height: 1.4;
 }
 
 .rules-list {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: clamp(8px, 1.8vh, 12px);
   list-style: none;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -361,13 +388,13 @@ html, body {
 .rules-list li {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(212, 175, 55, 0.15);
-  padding: 12px 18px;
+  padding: clamp(8px, 1.8vh, 14px) clamp(10px, 1.5vw, 18px);
   border-radius: 4px;
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
-  line-height: 1.4;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  line-height: 1.35;
   transition: border-color 0.3s;
 }
 
@@ -377,7 +404,7 @@ html, body {
 }
 
 .rules-list .emoji {
-  font-size: 1.4rem;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
   flex-shrink: 0;
 }
 
@@ -980,7 +1007,7 @@ html, body {
   color: var(--gold-light);
 }
 
-.menu-trigger-btn {
+.menu-trigger-btn, .music-toggle-btn {
   position: relative;
   background: rgba(17, 18, 21, 0.7);
   border: 1px solid var(--gold-primary);
@@ -996,16 +1023,24 @@ html, body {
   border-radius: 2px;
 }
 
-.menu-trigger-btn:hover {
+.menu-trigger-btn:hover, .music-toggle-btn:hover {
   background: var(--gold-primary);
   color: #111;
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
 
-.menu-trigger-btn .icon {
-  width: 22px;
-  height: 22px;
+.menu-trigger-btn .icon, .music-toggle-btn .icon {
+  width: 20px;
+  height: 20px;
   fill: currentColor;
+}
+
+.music-toggle-btn.playing .music-mute-line {
+  display: none;
+}
+
+.music-toggle-btn:not(.playing) .music-wave {
+  display: none;
 }
 
 /* Animations for Directional Slide Transitions */
